@@ -19,8 +19,9 @@ Just add the files you need included using `"include_files"` and they will be in
         "include_files": [
             "/path/to/file/you/want/to/include",
             "/path/to/another/file/you/want/to/include"
-        ]
-    },
+        ],
+        "exclude_files": []
+    }
 }
 ```
 
@@ -37,12 +38,13 @@ But now we can use *Composer - Include Files Plugin* to have Composer include th
 {
     "require": {
         "laravel/framework": "^5.2",
-        "funkjedi/composer-include-files": "^1.0",
+        "funkjedi/composer-include-files": "^1.0"
     },
     "extra": {
         "include_files": [
             "app/helpers.php"
-        ]
-    },
+        ],
+        "exclude_files": []
+    }
 }
 ```
