@@ -1,5 +1,5 @@
 {
-    "name": "funkjedi/composer-include-files",
+    "name": "nhzex/composer-include-files",
     "type": "composer-plugin",
     "description": "Include files at a higher priority than autoload files.",
     "keywords": ["composer", "autoload"],
@@ -12,7 +12,7 @@
         }
     ],
     "require": {
-        "composer-plugin-api": "^1.0"
+        "composer-plugin-api": "^1.1"
     },
     "autoload": {
         "psr-4": {
@@ -21,5 +21,8 @@
     },
     "extra": {
         "class": "ComposerIncludeFiles\\Plugin"
+    },
+    "require-dev": {
+        "composer/composer": "^1.9"
     }
 }

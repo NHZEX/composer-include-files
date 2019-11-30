@@ -10,10 +10,11 @@ use Composer\Util\Filesystem;
 
 class AutoloadGenerator extends ComposerAutoloadGenerator
 {
-	/**
-	 * @param array
-	 * @param \Composer\Package\PackageInterface
-	 */
+    /**
+     * @param array            $paths
+     * @param PackageInterface $mainPackage
+     * @return array
+     */
 	public function parseAutoloadsTypeFiles($paths, PackageInterface $mainPackage)
 	{
 		$autoloads = array();
@@ -35,13 +36,14 @@ class AutoloadGenerator extends ComposerAutoloadGenerator
 		return $autoloads;
 	}
 
-	/**
-	 * @param \Composer\Composer
-	 * @param string
-	 * @param string
-	 *
-	 * @see https://github.com/composer/composer/blob/master/src/Composer/Autoload/AutoloadGenerator.php#L115
-	 */
+    /**
+     * @param Composer $composer
+     * @param          $paths
+     * @param string   $targetDir
+     * @param string   $suffix
+     * @param int      $staticPhpVersion
+     * @see https://github.com/composer/composer/blob/master/src/Composer/Autoload/AutoloadGenerator.php#L115
+     */
 	public function dumpFiles(Composer $composer, $paths, $targetDir = 'composer', $suffix = '', $staticPhpVersion = 70000)
 	{
 		$installationManager = $composer->getInstallationManager();

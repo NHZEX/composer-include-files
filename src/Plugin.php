@@ -15,12 +15,12 @@ use Composer\Util\Filesystem;
 class Plugin implements PluginInterface, EventSubscriberInterface
 {
 	/**
-	 * @var \Composer\Composer
+	 * @var Composer
 	 */
 	protected $composer;
 
 	/**
-	 * @var \ComposerIncludeFiles\Composer\AutoloadGenerator
+	 * @var AutoloadGenerator
 	 */
 	protected $generator;
 
