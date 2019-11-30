@@ -5,7 +5,6 @@ namespace ComposerIncludeFiles;
 use Composer\Composer;
 use Composer\EventDispatcher\EventSubscriberInterface;
 use Composer\IO\IOInterface;
-use Composer\Plugin\PluginEvents;
 use Composer\Plugin\PluginInterface;
 use ComposerIncludeFiles\Composer\AutoloadGenerator;
 use Composer\Package\CompletePackage;
@@ -14,44 +13,44 @@ use Composer\Util\Filesystem;
 
 class Plugin implements PluginInterface, EventSubscriberInterface
 {
-	/**
-	 * @var Composer
-	 */
-	protected $composer;
+    /**
+     * @var Composer
+     */
+    protected $composer;
 
-	/**
-	 * @var AutoloadGenerator
-	 */
-	protected $generator;
+    /**
+     * @var AutoloadGenerator
+     */
+    protected $generator;
 
-	/**
-	 * Apply plugin modifications to Composer
-	 *
-	 * @param Composer    $composer
-	 * @param IOInterface $io
-	 */
-	public function activate(Composer $composer, IOInterface $io)
-	{
-		$this->composer = $composer;
-		$this->generator = new AutoloadGenerator($composer->getEventDispatcher(), $io);
-	}
+    /**
+     * Apply plugin modifications to Composer
+     *
+     * @param Composer    $composer
+     * @param IOInterface $io
+     */
+    public function activate(Composer $composer, IOInterface $io)
+    {
+        $this->composer  = $composer;
+        $this->generator = new AutoloadGenerator($composer->getEventDispatcher(), $io);
+    }
 
-	/**
-	 * @return array
-	 */
-	public static function getSubscribedEvents()
-	{
-	    return array(
-			'post-autoload-dump' => 'dumpFiles',
-		);
-	}
+    /**
+     * @return array
+     */
+    public static function getSubscribedEvents()
+    {
+        return array(
+            'post-autoload-dump' => 'dumpFiles',
+        );
+    }
 
-	public function dumpFiles(Event $event)
-	{
-	    // var to hold the include files
-        $extraIncludeFiles = [];
+    public function dumpFiles(Event $event)
+    {
+        // var to hold the include files
+        $extraIncludeFiles = array();
 
-        $extraExcludeFiles = [];
+        $extraExcludeFiles = array();
 
         // setup filesystem object
         $filesystem = new Filesystem();
@@ -112,5 +111,5 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 
         // if we have files, then process them
         $this->generator->dumpFiles($this->composer, $extraIncludeFiles, $extraExcludeFiles);
-	}
+    }
 }
