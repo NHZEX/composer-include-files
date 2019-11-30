@@ -51,6 +51,8 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 	    // var to hold the include files
         $extraIncludeFiles = [];
 
+        $extraExcludeFiles = [];
+
         // setup filesystem object
         $filesystem = new Filesystem();
 
@@ -66,20 +68,30 @@ class Plugin implements PluginInterface, EventSubscriberInterface
             // only include CompletePackages
             if ($package instanceof CompletePackage) {
 
+                // get this package base dir
+                $packageBaseDir = $filesystem->normalizePath($installationManager->getInstallPath($package));
+
                 // get this package extra config values
                 $packageConfig = $package->getExtra();
 
                 // if has include files
                 if (isset($packageConfig['include_files'])) {
 
-                    // get this package base dir
-                    $packageBaseDir = $filesystem->normalizePath($installationManager->getInstallPath($package));
-
                     // process each include file for the package
                     foreach ($packageConfig['include_files'] as $file) {
 
                         // update the path of the package file to be realitive of the vendor dir
                         $extraIncludeFiles[] = $filesystem->normalizePath($packageBaseDir . '/' . $file);
+                    }
+                }
+
+                if (isset($packageConfig['exclude_files'])) {
+
+                    // process each include file for the package
+                    foreach ($packageConfig['exclude_files'] as $file) {
+
+                        // update the path of the package file to be realitive of the vendor dir
+                        $extraExcludeFiles[] = $filesystem->normalizePath($packageBaseDir . '/' . $file);
                     }
                 }
             }
@@ -90,10 +102,15 @@ class Plugin implements PluginInterface, EventSubscriberInterface
         if (isset($package['include_files'])) {
             $extraIncludeFiles = array_merge($extraIncludeFiles, $package['include_files']);
         }
+        if (isset($package['exclude_files'])) {
+            $extraExcludeFiles = array_merge($extraExcludeFiles, $package['exclude_files']);
+        }
+
+        if (empty($extraIncludeFiles) && empty($extraExcludeFiles)) {
+            return;
+        }
 
         // if we have files, then process them
-        if (!empty($extraIncludeFiles)) {
-            $this->generator->dumpFiles($this->composer, $extraIncludeFiles);
-        }
+        $this->generator->dumpFiles($this->composer, $extraIncludeFiles, $extraExcludeFiles);
 	}
 }

@@ -38,13 +38,14 @@ class AutoloadGenerator extends ComposerAutoloadGenerator
 
     /**
      * @param Composer $composer
-     * @param          $paths
+     * @param string[] $paths
+     * @param array    $excludePaths
      * @param string   $targetDir
      * @param string   $suffix
      * @param int      $staticPhpVersion
      * @see https://github.com/composer/composer/blob/master/src/Composer/Autoload/AutoloadGenerator.php#L115
      */
-	public function dumpFiles(Composer $composer, $paths, $targetDir = 'composer', $suffix = '', $staticPhpVersion = 70000)
+	public function dumpFiles(Composer $composer, $paths, $excludePaths = array(), $targetDir = 'composer', $suffix = '', $staticPhpVersion = 70000)
 	{
 		$installationManager = $composer->getInstallationManager();
 		$localRepo = $composer->getRepositoryManager()->getLocalRepository();
@@ -87,6 +88,14 @@ class AutoloadGenerator extends ComposerAutoloadGenerator
 		$paths = $this->parseAutoloadsTypeFiles($paths, $mainPackage);
 
 		$autoloads['files'] = array_merge($paths, $autoloads['files']);
+
+        // prepend vendor path to exclude paths
+        foreach ($excludePaths as &$path) {
+            $path = $vendorPath . '/' . $path;
+        }
+        $autoloads['files'] = array_filter($autoloads['files'], function($path) use ($excludePaths, $filesystem) {
+            return !in_array($filesystem->normalizePath($path), $excludePaths);
+        });
 
 		$includeFilesFilePath = $targetDir.'/autoload_files.php';
 		if ($includeFilesFileContents = $this->getIncludeFilesFile($autoloads['files'], $filesystem, $basePath, $vendorPath, $vendorPathCode52, $appBaseDirCode)) {
