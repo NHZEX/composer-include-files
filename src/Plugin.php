@@ -6,6 +6,7 @@ use Composer\Composer;
 use Composer\EventDispatcher\EventSubscriberInterface;
 use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
+use Composer\Script\ScriptEvents;
 use ComposerIncludeFiles\Composer\AutoloadGenerator;
 use Composer\Package\CompletePackage;
 use Composer\Script\Event;
@@ -35,13 +36,21 @@ class Plugin implements PluginInterface, EventSubscriberInterface
         $this->generator = new AutoloadGenerator($composer->getEventDispatcher(), $io);
     }
 
+    public function deactivate(Composer $composer, IOInterface $io)
+    {
+    }
+
+    public function uninstall(Composer $composer, IOInterface $io)
+    {
+    }
+
     /**
      * @return array
      */
     public static function getSubscribedEvents()
     {
         return array(
-            'post-autoload-dump' => 'dumpFiles',
+            ScriptEvents::POST_AUTOLOAD_DUMP => 'dumpFiles',
         );
     }
 
